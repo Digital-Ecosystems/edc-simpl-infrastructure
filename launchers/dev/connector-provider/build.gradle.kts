@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2024 Microsoft Corporation
+ *  Copyright (c) 2024 IONOS
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -8,9 +8,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *       Microsoft Corporation - initial API and implementation
- *       Fraunhofer Institute for Software and Systems Engineering - added dependencies
- *       ZF Friedrichshafen AG - add dependency
+ *      IONOS
+ *
  */
 
 plugins {
@@ -26,6 +25,10 @@ dependencies {
 
     implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
     implementation("${edcGroup}:iam-mock:${edcVersion}")
+
+    // SIMPL Extensions
+    implementation(project(":extensions:control-plane"))
+    implementation(project(":extensions:data-plane"))
 }
 
 application {
