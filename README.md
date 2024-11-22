@@ -4,14 +4,13 @@ This repository contains the SIMPL Extension that works with the Eclipse Dataspa
 
 ## Based on the following
 
-- [https://github.com/eclipse-dataspaceconnector/DataSpaceConnector](https://github.com/eclipse-dataspaceconnector/DataSpaceConnector) - v0.7.2;
+- [Eclipse EDC](https://github.com/eclipse-dataspaceconnector/DataSpaceConnector) - v0.7.2;
 
 
 ## Requirements
 
 You will need the following:
 - Java Development Kit (JDK) 17 or higher;
-- Docker;
 - GIT;
 - Linux shell or PowerShell;
 
@@ -20,25 +19,27 @@ You will need the following:
 ### `extensions`
 Contains the source code of the SIMPL Infra Extension.
 
-### `launchers`
-Contains the required instructions to run an EDC Connector or create an EDC docker image with the Extension.
+### `launchers/dev`
+Contains the required instructions to run an EDC Connector with the extensions, for testing purposes.
 
 ## Modules, Dependencies and Usage
 
 ### Modules
 The extension has the following modules:
-| Module name                                                     | Description                                |
-|-----------------------------------------------------------------|--------------------------------------------|
-| `eu.europa.ec.simpl.programme.infrastructure.edc:control-plane` | Allows the creation of assets for the SIMPL project |
-| `eu.europa.ec.simpl.programme.infrastructure.edc:data-plane`    | Allows the triggering process of a deploymemt script inside the SIMPL context|
+
+| Module name                                                     | Description                                                                   |
+|-----------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `eu.europa.ec.simpl.programme.infrastructure.edc:control-plane` | Allows the creation of assets for the SIMPL project                           |
+| `eu.europa.ec.simpl.programme.infrastructure.edc:data-plane`    | Allows the triggering process of a deployment script inside the SIMPL context |
 
 ### Dependencies
 The extension has the following dependencies:
 
-| Module name                                  | Description                                                      |
-|----------------------------------------------|------------------------------------------------------------------|
-| `org.eclipse.edc:control-plane-core`            | Main features of the control plane |
-| `org.eclipse.edc:data-plane-core`            | Main features of the data plane |
+| Module name                           | Description                        |
+|---------------------------------------|------------------------------------|
+| `org.eclipse.edc:connector-core`      | Main features of a connector       |
+| `org.eclipse.edc:control-plane-core`  | Main features of the control plane |
+| `org.eclipse.edc:data-plane-core`     | Main features of the data plane    |
 
 ### Usage
 Payload of the creation of an asset, using the /management/v3/assets/ endpoint of the Connector:
@@ -59,13 +60,13 @@ Sample:
     }
 }
 ```
-| Field name                                                     | Description                                |
-|-----------------------------------------------------------------|--------------------------------------------|
-| @id | Id of the asset |
-| properties.name    | Name of the asset |
-| dataAddress.type    | This extension uses the `Infrastructure` designation  |
-| dataAddress.provioningAPI    | URL of the Cloud provider's API that will trigger the deployment script  |
-| dataAddress.deploymentScriptId    | Id the deployment script  |
+| Field name                     | Description                                                                                                 |
+|--------------------------------|-------------------------------------------------------------------------------------------------------------|
+| @id                            | Id of the asset                                                                                             |
+| properties.name                | Name of the asset                                                                                           |
+| dataAddress.type               | This extension uses the `Infrastructure` designation                                                        |
+| dataAddress.provioningAPI      | URL of the triggering module's API that will provision the deployment script on the infrastructure provider |
+| dataAddress.deploymentScriptId | Id the of deployment script registered on the triggering module                                             |
 
 Triggering of the `deployment script`, using the management/v3/transferprocesses endpoint of the Connector:
 ```
@@ -85,21 +86,31 @@ Sample
     }
 }
 ```
-| Field name                                                     | Description                                |
-|-----------------------------------------------------------------|--------------------------------------------|
-| transferType | This extension uses the `Infrastructure-PUSH` designation  |
-| dataDestination.type    | This extension uses the `Infrastructure` designation  |
-| dataDestination.consumerEmail    | Email address that will receive the status of the deployment of the `deploymentScriptId`  |
+| Field name                     | Description                                                                   |
+|--------------------------------|-------------------------------------------------------------------------------|
+| transferType                   | This extension uses the `Infrastructure-PUSH` designation                     |
+| dataDestination.type           | This extension uses the `Infrastructure` designation                          |
+| dataDestination.consumerEmail  | Email address that will receive the result of deployment script provisioning  |
 
-
-Note: the scope of this repo is NOT to exaplain the complete flows (and payloads) of the EDC Connector. If you want to know more please take a look at the [IONOS S3 Extension](https://github.com/Digital-Ecosystems/edc-ionos-s3).
+Note: the scope of this repo is NOT to explain the complete flows (and payloads) of the EDC Connector. If you want to know more please take a look at the [Eclipse EDC Samples](https://github.com/eclipse-edc/Samples).
 
 ## Building and Running
 
 ```bash
 git clone git@github.com:ionos-cloud/edc-simpl-infrastructure.git
-cd extensions
 ./gradlew clean build
 ```
 
+To run a provider connector:
 
+```bash
+cd launchers/dev/connector-provider
+java -Dedc.fs.config=resources/config.properties -jar build/libs/connector-provider.jar
+```
+
+To run a consumer connector:
+
+```bash
+cd launchers/dev/connector-consumer
+java -Dedc.fs.config=resources/config.properties -jar build/libs/connector-consumer.jar
+```
