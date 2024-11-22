@@ -37,7 +37,8 @@ jobs:
         run: ./gradlew clean build
 
       - name: Publish artifacts to GitHub Packages
-        run: |  
-            ./gradlew -PextensionsVersion=${{ github.ref_name }} \
-            -Dorg.gradle.project.gitHubUser=${{ github.actor }} \
-            -Dorg.gradle.project.gitHubToken=${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publish
+        env:
+          VERSION: ${{ github.ref_name }}
+          GITHUB_USER: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -18,12 +18,12 @@ plugins {
 }
 
 val extensionGroup: String by project
-val extensionVersion: String by project
 
 val edcGroup: String by project
 val edcVersion: String by project
 val junitVersion: String by project
 
+val version: String? = System.getenv("VERSION")
 val gitHubUser: String = project.findProperty("github.user") as String? ?: System.getenv("GITHUB_USER")
 val gitHubToken: String = project.findProperty("github.token") as String? ?: System.getenv("GITHUB_TOKEN")
 
@@ -58,7 +58,7 @@ publishing {
 		create<MavenPublication>("maven") {
 			groupId = extensionGroup
 			artifactId = "control-plane"
-			version = extensionVersion
+			version = version
 
 			from(components["java"])
 
