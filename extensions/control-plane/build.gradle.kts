@@ -24,8 +24,8 @@ val edcVersion: String by project
 val junitVersion: String by project
 
 val version: String? = System.getenv("VERSION")
-val gitHubUser: String = project.findProperty("github.user") as String? ?: System.getenv("GITHUB_USER")
-val gitHubToken: String = project.findProperty("github.token") as String? ?: System.getenv("GITHUB_TOKEN")
+val gitHubUser: String? = project.findProperty("github.user") as String? ?: System.getenv("GITHUB_USER")
+val gitHubToken: String? = project.findProperty("github.token") as String? ?: System.getenv("GITHUB_TOKEN")
 
 dependencies {
 	implementation("${edcGroup}:connector-core:${edcVersion}")

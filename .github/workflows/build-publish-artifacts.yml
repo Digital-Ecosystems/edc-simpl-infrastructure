@@ -33,12 +33,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Set version variable
+        run: |
+          TAG=${{ github.ref_name }}
+          echo "VERSION=${TAG#v}" >> $GITHUB_ENV
+
       - name: Build project
         run: ./gradlew clean build
+        env:
+          VERSION: ${VERSION}
+          GITHUB_USER: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish artifacts to GitHub Packages
         run: ./gradlew publish
         env:
-          VERSION: ${{ github.ref_name }}
+          VERSION: ${VERSION}
           GITHUB_USER: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
