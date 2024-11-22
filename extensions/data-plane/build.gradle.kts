@@ -29,13 +29,9 @@ val gitHubToken: String? = project.findProperty("github.token") as String? ?: Sy
 
 dependencies {
 	implementation("${edcGroup}:connector-core:${edcVersion}")
-
 	implementation("${edcGroup}:control-plane-spi:${edcVersion}")
-
 	implementation("${edcGroup}:data-plane-spi:${edcVersion}")
 	implementation("${edcGroup}:data-plane-util:${edcVersion}")
-
-	implementation("${edcGroup}:util-lib:${edcVersion}")
 	implementation("${edcGroup}:http-lib:${edcVersion}")
 
 	implementation(project(":extensions:control-plane"))
