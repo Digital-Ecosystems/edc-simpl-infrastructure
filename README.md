@@ -86,11 +86,11 @@ Sample
     }
 }
 ```
-| Field name                     | Description                                                                   |
-|--------------------------------|-------------------------------------------------------------------------------|
-| transferType                   | This extension uses the `Infrastructure-PUSH` designation                     |
-| dataDestination.type           | This extension uses the `Infrastructure` designation                          |
-| dataDestination.consumerEmail  | Email address that will receive the result of deployment script provisioning  |
+| Field name                     | Description                                                                        |
+|--------------------------------|------------------------------------------------------------------------------------|
+| transferType                   | This extension uses the `Infrastructure-PUSH` designation                          |
+| dataDestination.type           | This extension uses the `Infrastructure` designation                               |
+| dataDestination.consumerEmail  | Email address that will receive the result of the deployment script's provisioning |
 
 Note: the scope of this repo is NOT to explain the complete flows (and payloads) of the EDC Connector. If you want to know more please take a look at the [Eclipse EDC Samples](https://github.com/eclipse-edc/Samples).
 
@@ -101,14 +101,14 @@ git clone git@github.com:ionos-cloud/edc-simpl-infrastructure.git
 ./gradlew clean build
 ```
 
-To run a provider connector:
+To run a test provider connector:
 
 ```bash
 cd launchers/dev/connector-provider
 java -Dedc.fs.config=resources/config.properties -jar build/libs/connector-provider.jar
 ```
 
-To run a consumer connector:
+To run a test consumer connector:
 
 ```bash
 cd launchers/dev/connector-consumer
