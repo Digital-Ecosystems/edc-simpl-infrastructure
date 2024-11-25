@@ -42,6 +42,15 @@ The extension has the following dependencies:
 | `org.eclipse.edc:data-plane-core`     | Main features of the data plane    |
 
 ### Usage
+
+#### Diagrams
+
+Negotiation and Transfer processes sequence diagram:
+
+![Logo](docs/images/transfer-sequence-diagram.png)
+
+#### Payloads
+
 Payload of the creation of an asset, using the /management/v3/assets/ endpoint of the Connector:
 ```
 Sample:
