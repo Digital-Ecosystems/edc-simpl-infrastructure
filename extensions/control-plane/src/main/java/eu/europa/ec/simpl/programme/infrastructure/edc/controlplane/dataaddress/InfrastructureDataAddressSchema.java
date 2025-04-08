@@ -20,8 +20,8 @@ public interface InfrastructureDataAddressSchema {
 
     String INFRASTRUCTURE_TYPE = "Infrastructure";
 
-    String PROVISIONING_SCRIPT_ID = "provisioningAPI";
-    String PROVISIONING_SCRIPT_ID_PATH = EDC_NAMESPACE + "provisioningAPI";
+    String PROVISIONING_API = "provisioningAPI";
+    String PROVISIONING_API_PATH = EDC_NAMESPACE + "provisioningAPI";
 
     String DEPLOYMENT_SCRIPT_ID = "deploymentScriptId";
     String DEPLOYMENT_SCRIPT_ID_PATH = EDC_NAMESPACE + "deploymentScriptId";

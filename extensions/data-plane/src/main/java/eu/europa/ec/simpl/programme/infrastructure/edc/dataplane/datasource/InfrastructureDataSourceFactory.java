@@ -28,13 +28,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class InfrastructureDataSourceFactory implements DataSourceFactory {
     
+    private final String participantId;
     private final DataAddressValidatorRegistry dataAddressValidatorRegistry;
     private final TransferProcessStore transferProcessStore;
     private final AssetIndex assetIndex;
     
-    public InfrastructureDataSourceFactory(DataAddressValidatorRegistry dataAddressValidatorRegistry,
+    public InfrastructureDataSourceFactory(String participantId,
+                                           DataAddressValidatorRegistry dataAddressValidatorRegistry,
                                            TransferProcessStore transferProcessStore,
                                            AssetIndex assetIndex) {
+        this.participantId = participantId;
         this.dataAddressValidatorRegistry = dataAddressValidatorRegistry;
         this.transferProcessStore = transferProcessStore;
         this.assetIndex = assetIndex;
@@ -53,6 +56,7 @@ public class InfrastructureDataSourceFactory implements DataSourceFactory {
 
     @Override
     public DataSource createSource(DataFlowStartMessage request) {
+
         var transferProcessId = request.getProcessId();
 
         var transferProcess = transferProcessStore.findById(transferProcessId);
@@ -68,10 +72,13 @@ public class InfrastructureDataSourceFactory implements DataSourceFactory {
         if (!asset.getDataAddress().getType().equals(InfrastructureDataAddressSchema.INFRASTRUCTURE_TYPE)) {
             throw new EdcException("Invalid asset data address type: " + asset.getDataAddress().getType());
         }
-        var provisioningAPI = asset.getDataAddress().getStringProperty(InfrastructureDataAddressSchema.PROVISIONING_SCRIPT_ID);
+
+        var contractAgreementId = transferProcess.getContractId();
+
+        var provisioningAPI = asset.getDataAddress().getStringProperty(InfrastructureDataAddressSchema.PROVISIONING_API);
         var deploymentScriptId = asset.getDataAddress().getStringProperty(InfrastructureDataAddressSchema.DEPLOYMENT_SCRIPT_ID);
 
-        return new InfrastructureDataSource(transferProcessId, provisioningAPI, deploymentScriptId);
+        return new InfrastructureDataSource(participantId, contractAgreementId, provisioningAPI, deploymentScriptId);
     }
 
 }

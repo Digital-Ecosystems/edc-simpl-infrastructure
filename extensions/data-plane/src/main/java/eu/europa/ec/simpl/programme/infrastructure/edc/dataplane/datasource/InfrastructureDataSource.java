@@ -25,18 +25,24 @@ import static org.eclipse.edc.connector.dataplane.spi.pipeline.StreamResult.succ
 
 public class InfrastructureDataSource implements DataSource, DataSource.Part {
 
-    private final String transferProcessId;
+    private final String participantId;
+    private final String contractAgreementId;
     private final String provisioningAPI;
     private final String deploymentScriptId;
 
-    InfrastructureDataSource(String transferProcessId, String provisioningAPI, String deploymentScriptId) {
-        this.transferProcessId = transferProcessId;
+    InfrastructureDataSource(String participantId, String contractAgreementId, String provisioningAPI, String deploymentScriptId) {
+        this.participantId = participantId;
+        this.contractAgreementId = contractAgreementId;
         this.provisioningAPI = provisioningAPI;
         this.deploymentScriptId = deploymentScriptId;
     }
 
-    public String getTransferProcessId() {
-        return transferProcessId;
+    public String getParticipantId() {
+        return participantId;
+    }
+
+    public String getContractAgreementId() {
+        return contractAgreementId;
     }
 
     public String getProvisioningAPI() {
@@ -54,7 +60,7 @@ public class InfrastructureDataSource implements DataSource, DataSource.Part {
 
     @Override
     public String name() {
-        return transferProcessId;
+        return deploymentScriptId;
     }
 
     @Override
@@ -63,3 +69,4 @@ public class InfrastructureDataSource implements DataSource, DataSource.Part {
     }
 
 }
+
