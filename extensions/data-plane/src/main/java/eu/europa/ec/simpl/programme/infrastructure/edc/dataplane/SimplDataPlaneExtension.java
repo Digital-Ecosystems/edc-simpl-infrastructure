@@ -70,7 +70,8 @@ public class SimplDataPlaneExtension implements ServiceExtension {
         var backendAPIClient = new BackendAPIClient(httpClient, typeManager.getMapper());
 
         // Data Plane
-        var sourceFactory = new InfrastructureDataSourceFactory(dataAddressValidatorRegistry, transferProcessStore, assetIndex);
+        var participantId = context.getParticipantId();
+        var sourceFactory = new InfrastructureDataSourceFactory(participantId, dataAddressValidatorRegistry, transferProcessStore, assetIndex);
         pipelineService.registerFactory(sourceFactory);
 
         var sinkFactory = new InfrastructureDataSinkFactory(monitor, dataAddressValidatorRegistry, executorContainer.getExecutorService(), backendAPIClient);

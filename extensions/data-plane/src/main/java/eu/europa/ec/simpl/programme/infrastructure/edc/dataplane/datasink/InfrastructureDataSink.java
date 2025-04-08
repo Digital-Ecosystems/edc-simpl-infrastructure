@@ -38,15 +38,16 @@ public class InfrastructureDataSink extends ParallelSink {
         for (DataSource.Part part : parts) {
             var dataSource = (InfrastructureDataSource) part;
 
-            var transferProcessId = dataSource.getTransferProcessId();
+            var requesterUniqueId = String.format("%s.%s", dataSource.getParticipantId(), dataSource.getContractAgreementId());
+
             var provisioningAPI = dataSource.getProvisioningAPI();
             var deploymentScriptId = dataSource.getDeploymentScriptId();
 
-            var response = backendAPIClient.sendTriggerRequest(provisioningAPI, deploymentScriptId, transferProcessId, consumerEmail);
+            var response = backendAPIClient.sendTriggerRequest(provisioningAPI, deploymentScriptId, requesterUniqueId, consumerEmail);
 
             if (response.success()) {
-                this.monitor.info(format("Script trigger request successful send to provisioningAPI %s, transferProcessId: %s, deploymentScriptId: %s",
-                        provisioningAPI, transferProcessId, deploymentScriptId));
+                this.monitor.info(format("Script trigger request successful send to provisioningAPI %s, requesterUniqueId: %s, deploymentScriptId: %s",
+                        provisioningAPI, requesterUniqueId, deploymentScriptId));
             } else {
                 return StreamResult.error((format("Error sending script trigger request to provisioningAPI %s, error: %s",
                         provisioningAPI, response.message())));
