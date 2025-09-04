@@ -28,18 +28,7 @@ val gitHubUser: String? = project.findProperty("github.user") as String? ?: Syst
 val gitHubToken: String? = project.findProperty("github.token") as String? ?: System.getenv("GITHUB_TOKEN")
 
 dependencies {
-	implementation("${edcGroup}:connector-core:${edcVersion}")
 	implementation("${edcGroup}:control-plane-spi:${edcVersion}")
-	implementation("${edcGroup}:data-plane-spi:${edcVersion}")
-	implementation("${edcGroup}:data-plane-util:${edcVersion}")
-	implementation("${edcGroup}:http-lib:${edcVersion}")
-
-    implementation(project(":extensions:core"))
-
-    testImplementation("${edcGroup}:junit:${edcVersion}")
-	testImplementation("${edcGroup}:http-spi:${edcVersion}")
-	testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-	testImplementation("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
 
 java {
@@ -55,14 +44,14 @@ publishing {
 	publications {
 		create<MavenPublication>("maven") {
 			groupId = extensionGroup
-			artifactId = "data-plane"
+			artifactId = "control-plane"
 			version = extensionVersion
 
 			from(components["java"])
 
 			pom {
-				name.set("data-plane")
-				description.set("SIMPL Infrastructure Data Plane extensions")
+				name.set("control-plane")
+				description.set("SIMPL Infrastructure Control Plane extensions")
 			}
 		}
 	}

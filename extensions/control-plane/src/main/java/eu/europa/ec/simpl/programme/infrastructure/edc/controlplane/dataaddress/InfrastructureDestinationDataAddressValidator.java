@@ -14,6 +14,7 @@
 
 package eu.europa.ec.simpl.programme.infrastructure.edc.controlplane.dataaddress;
 
+import eu.europa.ec.simpl.programme.infrastructure.edc.InfrastructureSchema;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.util.string.StringUtils;
 import org.eclipse.edc.validator.spi.ValidationResult;
@@ -27,9 +28,9 @@ public class InfrastructureDestinationDataAddressValidator implements Validator<
     @Override
     public ValidationResult validate(@NotNull DataAddress dataAddress) {
 
-        var consumerEmail = dataAddress.getStringProperty(InfrastructureDataAddressSchema.CONSUMER_EMAIL_PATH);
+        var consumerEmail = dataAddress.getStringProperty(InfrastructureSchema.CONSUMER_EMAIL_PATH);
         if (StringUtils.isNullOrBlank(consumerEmail)) {
-            var violation = violation("consumerEmail is required", InfrastructureDataAddressSchema.CONSUMER_EMAIL_PATH);
+            var violation = violation("consumerEmail is required", InfrastructureSchema.CONSUMER_EMAIL_PATH);
             return ValidationResult.failure(violation);
         }
 

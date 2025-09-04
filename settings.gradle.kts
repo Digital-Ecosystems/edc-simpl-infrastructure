@@ -5,6 +5,7 @@ dependencyResolutionManagement {
     }
 }
 
+include(":extensions:core")
 include(":extensions:control-plane")
 include(":extensions:data-plane")
 

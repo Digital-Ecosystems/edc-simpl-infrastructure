@@ -12,11 +12,11 @@
  *
  */
 
-package eu.europa.ec.simpl.programme.infrastructure.edc.controlplane.dataaddress;
+package eu.europa.ec.simpl.programme.infrastructure.edc;
 
 import static org.eclipse.edc.spi.constants.CoreConstants.EDC_NAMESPACE;
 
-public interface InfrastructureDataAddressSchema {
+public interface InfrastructureSchema {
 
     String INFRASTRUCTURE_TYPE = "Infrastructure";
 
@@ -26,5 +26,6 @@ public interface InfrastructureDataAddressSchema {
     String DEPLOYMENT_SCRIPT_ID = "deploymentScriptId";
     String DEPLOYMENT_SCRIPT_ID_PATH = EDC_NAMESPACE + "deploymentScriptId";
 
+    String SECRET_KEY_PATH = EDC_NAMESPACE + "secretKey";
     String CONSUMER_EMAIL_PATH = EDC_NAMESPACE + "consumerEmail";
 }

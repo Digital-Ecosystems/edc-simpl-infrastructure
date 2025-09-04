@@ -32,10 +32,7 @@ dependencies {
 	implementation("${edcGroup}:control-plane-spi:${edcVersion}")
 	implementation("${edcGroup}:util-lib:${edcVersion}")
 
-	testImplementation("${edcGroup}:junit:${edcVersion}")
-	testImplementation("${edcGroup}:http-spi:${edcVersion}")
-	testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-	testImplementation("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    implementation(project(":extensions:core"))
 }
 
 java {
@@ -43,22 +40,18 @@ java {
 	withSourcesJar()
 }
 
-tasks.test {
-	useJUnitPlatform()
-}
-
 publishing {
 	publications {
 		create<MavenPublication>("maven") {
 			groupId = extensionGroup
-			artifactId = "control-plane"
+			artifactId = "core"
 			version = extensionVersion
 
 			from(components["java"])
 
 			pom {
-				name.set("control-plane")
-				description.set("SIMPL Infrastructure Control Plane extensions")
+				name.set("core")
+				description.set("SIMPL Infrastructure Core extensions")
 			}
 		}
 	}
