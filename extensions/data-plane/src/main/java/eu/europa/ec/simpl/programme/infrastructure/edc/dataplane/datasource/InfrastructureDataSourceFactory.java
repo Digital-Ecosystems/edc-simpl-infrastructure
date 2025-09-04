@@ -14,7 +14,7 @@
 
 package eu.europa.ec.simpl.programme.infrastructure.edc.dataplane.datasource;
 
-import eu.europa.ec.simpl.programme.infrastructure.edc.controlplane.dataaddress.InfrastructureDataAddressSchema;
+import eu.europa.ec.simpl.programme.infrastructure.edc.InfrastructureSchema;
 import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.dataplane.spi.pipeline.DataSource;
@@ -45,7 +45,7 @@ public class InfrastructureDataSourceFactory implements DataSourceFactory {
 
     @Override
     public String supportedType() {
-        return InfrastructureDataAddressSchema.INFRASTRUCTURE_TYPE;
+        return InfrastructureSchema.INFRASTRUCTURE_TYPE;
     }
 
     @Override
@@ -69,14 +69,14 @@ public class InfrastructureDataSourceFactory implements DataSourceFactory {
         if (asset == null) {
             throw new EdcException("Asset not found: " + assetId);
         }
-        if (!asset.getDataAddress().getType().equals(InfrastructureDataAddressSchema.INFRASTRUCTURE_TYPE)) {
+        if (!asset.getDataAddress().getType().equals(InfrastructureSchema.INFRASTRUCTURE_TYPE)) {
             throw new EdcException("Invalid asset data address type: " + asset.getDataAddress().getType());
         }
 
         var contractAgreementId = transferProcess.getContractId();
 
-        var provisioningAPI = asset.getDataAddress().getStringProperty(InfrastructureDataAddressSchema.PROVISIONING_API);
-        var deploymentScriptId = asset.getDataAddress().getStringProperty(InfrastructureDataAddressSchema.DEPLOYMENT_SCRIPT_ID);
+        var provisioningAPI = asset.getDataAddress().getStringProperty(InfrastructureSchema.PROVISIONING_API);
+        var deploymentScriptId = asset.getDataAddress().getStringProperty(InfrastructureSchema.DEPLOYMENT_SCRIPT_ID);
 
         return new InfrastructureDataSource(participantId, contractAgreementId, provisioningAPI, deploymentScriptId);
     }

@@ -25,16 +25,19 @@ import org.eclipse.edc.connector.dataplane.spi.pipeline.PipelineService;
 import org.eclipse.edc.runtime.metamodel.annotation.Extension;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
+import org.eclipse.edc.spi.security.Vault;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.validator.spi.DataAddressValidatorRegistry;
 
-@Provides(SimplDataPlaneExtension.class)
-@Extension(value = SimplDataPlaneExtension.NAME)
-public class SimplDataPlaneExtension implements ServiceExtension {
+@Provides(InfrastructureDataPlaneExtension.class)
+@Extension(value = InfrastructureDataPlaneExtension.NAME)
+public class InfrastructureDataPlaneExtension implements ServiceExtension {
 
     public static final String NAME = "SIMPL Infrastructure Data Plane Extensions";
+
+    private static final String DEFAULT_AUTH_TOKEN_CONFIG = "edc.infrastructure.simpl.default.auth.token";
 
     @Inject
     private DataAddressValidatorRegistry dataAddressValidatorRegistry;
@@ -52,6 +55,9 @@ public class SimplDataPlaneExtension implements ServiceExtension {
     private TransferProcessStore transferProcessStore;
 
     @Inject
+    private Vault vault;
+
+    @Inject
     private AssetIndex assetIndex;
 
     @Inject
@@ -66,6 +72,12 @@ public class SimplDataPlaneExtension implements ServiceExtension {
     public void initialize(ServiceExtensionContext context) {
         var monitor = context.getMonitor().withPrefix(this.getClass().getSimpleName());
 
+        var defaultAuthToken =  context.getSetting(DEFAULT_AUTH_TOKEN_CONFIG, "");
+        if (defaultAuthToken.isBlank()) {
+            monitor.warning(String.format("Required setting %s not found. The extension will not loaded", DEFAULT_AUTH_TOKEN_CONFIG));
+            return;
+        }
+
         // Backend API
         var backendAPIClient = new BackendAPIClient(httpClient, typeManager.getMapper());
 
@@ -74,7 +86,7 @@ public class SimplDataPlaneExtension implements ServiceExtension {
         var sourceFactory = new InfrastructureDataSourceFactory(participantId, dataAddressValidatorRegistry, transferProcessStore, assetIndex);
         pipelineService.registerFactory(sourceFactory);
 
-        var sinkFactory = new InfrastructureDataSinkFactory(monitor, dataAddressValidatorRegistry, executorContainer.getExecutorService(), backendAPIClient);
+        var sinkFactory = new InfrastructureDataSinkFactory(monitor, dataAddressValidatorRegistry, executorContainer.getExecutorService(), vault, backendAPIClient, typeManager, defaultAuthToken);
         pipelineService.registerFactory(sinkFactory);
         monitor.debug("Data Plane components initialized");
 

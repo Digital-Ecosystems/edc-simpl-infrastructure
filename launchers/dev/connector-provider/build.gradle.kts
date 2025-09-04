@@ -26,6 +26,7 @@ dependencies {
     implementation("${edcGroup}:http:${edcVersion}")
     implementation("${edcGroup}:dsp:${edcVersion}")
     implementation("${edcGroup}:management-api:${edcVersion}")
+    implementation("${edcGroup}:secrets-api:${edcVersion}")
     implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
     implementation("${edcGroup}:iam-mock:${edcVersion}")
 
