@@ -4,7 +4,7 @@ This repository contains the SIMPL Extension that works with the Eclipse Dataspa
 
 ## Based on the following
 
-- [Eclipse EDC](https://github.com/eclipse-dataspaceconnector/DataSpaceConnector) - v0.7.2;
+- [Eclipse EDC](https://github.com/eclipse-dataspaceconnector/DataSpaceConnector) - v0.10.1;
 
 
 ## Requirements
@@ -33,27 +33,39 @@ The extension has the following modules:
 | `eu.europa.ec.simpl.programme.infrastructure.edc:data-plane`    | Allows the triggering process of a deployment script inside the SIMPL context |
 
 ### Dependencies
-The extension has the following dependencies:
+The `control-plane` extension has the following dependencies:
 
-| Module name                           | Description                        |
-|---------------------------------------|------------------------------------|
-| `org.eclipse.edc:connector-core`      | Main features of a connector       |
-| `org.eclipse.edc:control-plane-core`  | Main features of the control plane |
-| `org.eclipse.edc:data-plane-core`     | Main features of the data plane    |
+| Module name                          | Description                        |
+|--------------------------------------|------------------------------------|
+| `org.eclipse.edc:control-plane-core` | Main features of the control plane |
+| `org.eclipse.edc:management-api`     | Management API extension           |
+| `org.eclipse.edc:secrets-api`        | Management Secrets API extension   |
+
+The `data-plane` extension has the following dependencies:
+
+| Module name                          | Description                     |
+|--------------------------------------|---------------------------------|
+| `org.eclipse.edc:data-plane-core`    | Main features of the data plane |
+
+### Configurations
+The `data-plane` extension has the following configurations:
+
+| Configuration name                            | Description                                                                                                                 |
+|-----------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| `edc.infrastructure.simpl.default.auth.token` | Default authentication token send to infrastructure-be API if a `secretKey` is not provided in the transfer process request |
 
 ### Usage
 
 #### Diagrams
 
-Negotiation and Transfer processes sequence diagram:
+Negotiation and transfer sequence diagram:
 
 ![Logo](docs/images/transfer-sequence-diagram.png)
 
 #### Payloads
 
-Payload of the creation of an asset, using the /management/v3/assets/ endpoint of the Connector:
+Payload of the creation of an asset, using the `/management/v3/assets/ endpoint` of the Connector:
 ```
-Sample:
 {
     "@context": {
         "@vocab": "https://w3id.org/edc/v0.0.1/ns/")
@@ -69,17 +81,17 @@ Sample:
     }
 }
 ```
-| Field name                     | Description                                                                                                 |
-|--------------------------------|-------------------------------------------------------------------------------------------------------------|
-| @id                            | Id of the asset                                                                                             |
-| properties.name                | Name of the asset                                                                                           |
-| dataAddress.type               | This extension uses the `Infrastructure` designation                                                        |
-| dataAddress.provioningAPI      | URL of the triggering module's API that will provision the deployment script on the infrastructure provider |
-| dataAddress.deploymentScriptId | Id the of deployment script registered on the triggering module                                             |
 
-Triggering of the `deployment script`, using the management/v3/transferprocesses endpoint of the Connector:
+| Field name                       | Description                                                                                                 |
+|----------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `@id`                            | Id of the asset                                                                                             |
+| `properties.name`                | Name of the asset                                                                                           |
+| `dataAddress.type`               | This extension uses the `Infrastructure` designation                                                        |
+| `dataAddress.provioningAPI`      | URL of the triggering module's API that will provision the deployment script on the infrastructure provider |
+| `dataAddress.deploymentScriptId` | Id the of deployment script registered on the triggering module                                             |
+
+Triggering of the deployment script, using the `management/v3/transferprocesses` endpoint of the Connector:
 ```
-Sample
 {
     "@context":{
         "edc":"https://w3id.org/edc/v0.0.1/ns/"
@@ -91,15 +103,18 @@ Sample
     "transferType": "Infrastructure-PUSH",
     "dataDestination":{
         "type":"Infrastructure",
+        "secretKey": "7ad730f9-b380-4cc2-9268-61284dbda6ba"
         "consumerEmail": "someuser@xptodomain.com"
     }
 }
 ```
-| Field name                     | Description                                                                        |
-|--------------------------------|------------------------------------------------------------------------------------|
-| transferType                   | This extension uses the `Infrastructure-PUSH` designation                          |
-| dataDestination.type           | This extension uses the `Infrastructure` designation                               |
-| dataDestination.consumerEmail  | Email address that will receive the result of the deployment script's provisioning |
+
+| Field name                    | Required | Description                                                                                                                                                                                                                                                                                                                                                                                             |
+|-------------------------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| transferType                  | True     | This extension uses the `Infrastructure-PUSH` designation                                                                                                                                                                                                                                                                                                                                               |
+| dataDestination.type          | True     | This extension uses the `Infrastructure` designation                                                                                                                                                                                                                                                                                                                                                    |
+| dataDestination.secretKey     | False    | Id of the secret stored in the Vault using the [Secrets API](https://eclipse-edc.github.io/Connector/openapi/management-api/#/). This secret's value will be send as `Authorization` header to the infrastructure-be API. If a `secretKey` is not send, the value configured in `edc.infrastructure.simpl.default.auth.token` will be send as `Authorization` header to the infrastructure-be API |
+| dataDestination.consumerEmail | True     | Email address that will receive the result of the deployment script's provisioning                                                                                                                                                                                                                                                                                                                      |
 
 Note: the scope of this repo is NOT to explain the complete flows (and payloads) of the EDC Connector. If you want to know more please take a look at the [Eclipse EDC Samples](https://github.com/eclipse-edc/Samples).
 
