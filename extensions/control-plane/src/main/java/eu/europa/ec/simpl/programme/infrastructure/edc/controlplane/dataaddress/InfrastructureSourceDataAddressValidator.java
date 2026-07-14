@@ -28,12 +28,6 @@ public class InfrastructureSourceDataAddressValidator implements Validator<DataA
     @Override
     public ValidationResult validate(@NotNull DataAddress dataAddress) {
 
-        var provisioningAPI = dataAddress.getStringProperty(InfrastructureSchema.PROVISIONING_API_PATH);
-        if (StringUtils.isNullOrBlank(provisioningAPI)) {
-            var violation = violation("provisioningAPI is required", InfrastructureSchema.PROVISIONING_API_PATH);
-            return ValidationResult.failure(violation);
-        }
-
         var deploymentScriptId = dataAddress.getStringProperty(InfrastructureSchema.DEPLOYMENT_SCRIPT_ID_PATH);
         if (StringUtils.isNullOrBlank(deploymentScriptId)) {
             var violation = violation("deploymentScriptId is required", InfrastructureSchema.DEPLOYMENT_SCRIPT_ID_PATH);

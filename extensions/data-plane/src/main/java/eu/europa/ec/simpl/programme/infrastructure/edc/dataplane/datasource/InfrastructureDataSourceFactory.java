@@ -41,6 +41,7 @@ public class InfrastructureDataSourceFactory implements DataSourceFactory {
         this.dataAddressValidatorRegistry = dataAddressValidatorRegistry;
         this.transferProcessStore = transferProcessStore;
         this.assetIndex = assetIndex;
+
     }
 
     @Override
@@ -75,10 +76,9 @@ public class InfrastructureDataSourceFactory implements DataSourceFactory {
 
         var contractAgreementId = transferProcess.getContractId();
 
-        var provisioningAPI = asset.getDataAddress().getStringProperty(InfrastructureSchema.PROVISIONING_API);
         var deploymentScriptId = asset.getDataAddress().getStringProperty(InfrastructureSchema.DEPLOYMENT_SCRIPT_ID);
 
-        return new InfrastructureDataSource(participantId, contractAgreementId, provisioningAPI, deploymentScriptId);
+        return new InfrastructureDataSource(participantId, contractAgreementId, deploymentScriptId);
     }
 
 }
