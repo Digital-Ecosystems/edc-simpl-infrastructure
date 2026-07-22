@@ -39,9 +39,9 @@ public class BackendAPIClient {
         this.objectMapper = objectMapper;
     }
 
-    public ScriptTriggerResponse sendTriggerRequest(String endpoint, String authToken, String deploymentScriptId, String requesterUniqueId, String requesterEmail) {
+    public ScriptTriggerResponse sendTriggerRequest(String endpoint, String authToken, String deploymentScriptId, String requesterUniqueId, String requesterEmail, String originAddress) {
 
-        var payload = new ScriptTriggerRequest(deploymentScriptId, requesterUniqueId, requesterEmail);
+        var payload = new ScriptTriggerRequest(deploymentScriptId, requesterUniqueId, requesterEmail, originAddress);
 
         try {
            return sendRequest(endpoint, authToken, requesterUniqueId, payload, ScriptTriggerResponse.class);
@@ -85,7 +85,7 @@ public class BackendAPIClient {
                 .build();
     }
 
-    public record ScriptTriggerRequest(String deploymentScriptId, String requesterUniqueId, String requesterEmail) {
+    public record ScriptTriggerRequest(String deploymentScriptId, String requesterUniqueId, String requesterEmail, String originAddress) {
     }
 
     public record ScriptTriggerResponse(Boolean success, String message) {

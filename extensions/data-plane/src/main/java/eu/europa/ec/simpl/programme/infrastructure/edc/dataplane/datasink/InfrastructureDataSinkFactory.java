@@ -16,8 +16,10 @@ package eu.europa.ec.simpl.programme.infrastructure.edc.dataplane.datasink;
 
 import eu.europa.ec.simpl.programme.infrastructure.edc.InfrastructureSchema;
 import eu.europa.ec.simpl.programme.infrastructure.edc.dataplane.backend.BackendAPIClient;
+import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.dataplane.spi.pipeline.DataSink;
 import org.eclipse.edc.connector.dataplane.spi.pipeline.DataSinkFactory;
+import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.spi.security.Vault;
@@ -27,6 +29,7 @@ import org.eclipse.edc.validator.spi.DataAddressValidatorRegistry;
 import org.eclipse.edc.validator.spi.ValidationResult;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URI;
 import java.util.concurrent.ExecutorService;
 
 import static eu.europa.ec.simpl.programme.infrastructure.edc.InfrastructureSchema.CONSUMER_EMAIL_PATH;
@@ -41,6 +44,7 @@ public class InfrastructureDataSinkFactory implements DataSinkFactory {
     private final TypeManager typeManager;
     private final String defaultAuthToken;
     private final String provisionApiUrl;
+    private final TransferProcessStore transferProcessStore;
 
     public InfrastructureDataSinkFactory(Monitor monitor,
                                          DataAddressValidatorRegistry dataAddressValidatorRegistry,
@@ -49,7 +53,8 @@ public class InfrastructureDataSinkFactory implements DataSinkFactory {
                                          BackendAPIClient backendAPIClient,
                                          TypeManager typeManager,
                                          String defaultAuthToken,
-                                         String provisionApiUrl) {
+                                         String provisionApiUrl,
+                                         TransferProcessStore transferProcessStore) {
         this.monitor = monitor;
         this.dataAddressValidatorRegistry = dataAddressValidatorRegistry;
         this.executorService = executorService;
@@ -58,6 +63,7 @@ public class InfrastructureDataSinkFactory implements DataSinkFactory {
         this.typeManager = typeManager;
         this.defaultAuthToken = defaultAuthToken;
         this.provisionApiUrl = provisionApiUrl;
+        this.transferProcessStore = transferProcessStore;
     }
 
     @Override
@@ -77,6 +83,14 @@ public class InfrastructureDataSinkFactory implements DataSinkFactory {
         var keyName = destination.getKeyName();
         var consumerEmail = destination.getStringProperty(CONSUMER_EMAIL_PATH);
 
+        var transferProcessId = request.getProcessId();
+
+        var transferProcess = transferProcessStore.findById(transferProcessId);
+        if (transferProcess == null) {
+            throw new EdcException("Transfer process not found: " + transferProcessId);
+        }
+        var counterPartyAddress = URI.create(transferProcess.getCounterPartyAddress());
+
         return InfrastructureDataSink.Builder.newInstance()
                 .monitor(monitor)
                 .executorService(executorService)
@@ -87,6 +101,7 @@ public class InfrastructureDataSinkFactory implements DataSinkFactory {
                 .keyName(keyName)
                 .defaultAuthToken(defaultAuthToken)
                 .provisionApiUrl(provisionApiUrl)
+                .counterPartyAddress(counterPartyAddress)
                 .consumerEmail(consumerEmail)
                 .build();
     }

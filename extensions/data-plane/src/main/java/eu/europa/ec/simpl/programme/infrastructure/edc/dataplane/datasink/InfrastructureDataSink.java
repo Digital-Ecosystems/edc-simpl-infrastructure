@@ -24,6 +24,7 @@ import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.security.Vault;
 import org.eclipse.edc.spi.types.TypeManager;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,6 +39,7 @@ public class InfrastructureDataSink extends ParallelSink {
     private String defaultAuthToken;
     private String provisionApiUrl;
     private String consumerEmail;
+    private URI counterPartyAddress;
 
     InfrastructureDataSink() {}
 
@@ -53,10 +55,14 @@ public class InfrastructureDataSink extends ParallelSink {
 
             var authToken = getAuthToken();
 
-            var response = backendAPIClient.sendTriggerRequest(provisionApiUrl, authToken, deploymentScriptId, requesterUniqueId, consumerEmail);
+            var originAddress = String.format("%s://%s",
+                    counterPartyAddress.getScheme(),
+                    counterPartyAddress.getAuthority());
+
+            var response = backendAPIClient.sendTriggerRequest(provisionApiUrl, authToken, deploymentScriptId, requesterUniqueId, consumerEmail, originAddress);
 
             if (response.success()) {
-                this.monitor.info(format("Script trigger request successful send to provisioningAPI %s, requesterUniqueId: %s, deploymentScriptId: %s",
+                this.monitor.info(format("Script trigger request successful send to provisioningAPI %s, requesterUniqueId: %s, deploymentScriptId: %s, originAddress: %s",
                         provisionApiUrl, requesterUniqueId, deploymentScriptId));
             } else {
                 return StreamResult.error((format("Error sending script trigger request to provisioningAPI %s, error: %s",
@@ -126,6 +132,11 @@ public class InfrastructureDataSink extends ParallelSink {
             return this;
         }
 
+        public Builder counterPartyAddress (URI counterPartyAddress){
+            sink.counterPartyAddress = counterPartyAddress;
+            return this;
+        }
+
         @Override
         protected void validate() {
             Objects.requireNonNull(sink.backendAPIClient, "backendAPIClient is required");
@@ -134,6 +145,7 @@ public class InfrastructureDataSink extends ParallelSink {
             Objects.requireNonNull(sink.defaultAuthToken, "defaultAuthToken is required");
             Objects.requireNonNull(sink.provisionApiUrl, "provisionApiUrl is required");
             Objects.requireNonNull(sink.consumerEmail, "consumerEmail is required");
+            Objects.requireNonNull(sink.counterPartyAddress, "counterPartyAddress is required");
         }
     }
 }
