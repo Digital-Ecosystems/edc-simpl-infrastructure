@@ -30,7 +30,7 @@ import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.validator.spi.DataAddressValidatorRegistry;
-
+import org.eclipse.edc.spi.EdcException;
 @Provides(InfrastructureDataPlaneExtension.class)
 @Extension(value = InfrastructureDataPlaneExtension.NAME)
 public class InfrastructureDataPlaneExtension implements ServiceExtension {
@@ -38,6 +38,7 @@ public class InfrastructureDataPlaneExtension implements ServiceExtension {
     public static final String NAME = "SIMPL Infrastructure Data Plane Extensions";
 
     private static final String DEFAULT_AUTH_TOKEN_CONFIG = "edc.infrastructure.simpl.default.auth.token";
+    private static final String DEFAULT_PROVISION_API_URL = "edc.infrastructure.simpl.provision.api.url";
 
     @Inject
     private DataAddressValidatorRegistry dataAddressValidatorRegistry;
@@ -78,6 +79,11 @@ public class InfrastructureDataPlaneExtension implements ServiceExtension {
             return;
         }
 
+        var provisionApiUrl = context.getSetting(DEFAULT_PROVISION_API_URL, "");
+        if (provisionApiUrl.isBlank()) {
+            throw new EdcException(String.format("Required setting %s not found. The extension will not loaded", DEFAULT_PROVISION_API_URL));
+        }
+
         // Backend API
         var backendAPIClient = new BackendAPIClient(httpClient, typeManager.getMapper());
 
@@ -86,7 +92,7 @@ public class InfrastructureDataPlaneExtension implements ServiceExtension {
         var sourceFactory = new InfrastructureDataSourceFactory(participantId, dataAddressValidatorRegistry, transferProcessStore, assetIndex);
         pipelineService.registerFactory(sourceFactory);
 
-        var sinkFactory = new InfrastructureDataSinkFactory(monitor, dataAddressValidatorRegistry, executorContainer.getExecutorService(), vault, backendAPIClient, typeManager, defaultAuthToken);
+        var sinkFactory = new InfrastructureDataSinkFactory(monitor, dataAddressValidatorRegistry, executorContainer.getExecutorService(), vault, backendAPIClient, typeManager, defaultAuthToken, provisionApiUrl);
         pipelineService.registerFactory(sinkFactory);
         monitor.debug("Data Plane components initialized");
 

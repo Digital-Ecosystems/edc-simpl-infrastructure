@@ -44,7 +44,7 @@ public class BackendAPIClient {
         var payload = new ScriptTriggerRequest(deploymentScriptId, requesterUniqueId, requesterEmail);
 
         try {
-            return sendRequest(endpoint, authToken, requesterUniqueId, payload, ScriptTriggerResponse.class);
+           return sendRequest(endpoint, authToken, requesterUniqueId, payload, ScriptTriggerResponse.class);
         } catch (Exception e) {
             throw new EdcException(format("Error sending script trigger request to endpoint %s", endpoint), e);
         }

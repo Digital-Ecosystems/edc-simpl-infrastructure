@@ -40,6 +40,7 @@ public class InfrastructureDataSinkFactory implements DataSinkFactory {
     private final BackendAPIClient backendAPIClient;
     private final TypeManager typeManager;
     private final String defaultAuthToken;
+    private final String provisionApiUrl;
 
     public InfrastructureDataSinkFactory(Monitor monitor,
                                          DataAddressValidatorRegistry dataAddressValidatorRegistry,
@@ -47,7 +48,8 @@ public class InfrastructureDataSinkFactory implements DataSinkFactory {
                                          Vault vault,
                                          BackendAPIClient backendAPIClient,
                                          TypeManager typeManager,
-                                         String defaultAuthToken) {
+                                         String defaultAuthToken,
+                                         String provisionApiUrl) {
         this.monitor = monitor;
         this.dataAddressValidatorRegistry = dataAddressValidatorRegistry;
         this.executorService = executorService;
@@ -55,6 +57,7 @@ public class InfrastructureDataSinkFactory implements DataSinkFactory {
         this.backendAPIClient = backendAPIClient;
         this.typeManager = typeManager;
         this.defaultAuthToken = defaultAuthToken;
+        this.provisionApiUrl = provisionApiUrl;
     }
 
     @Override
@@ -83,6 +86,7 @@ public class InfrastructureDataSinkFactory implements DataSinkFactory {
                 .vault(vault)
                 .keyName(keyName)
                 .defaultAuthToken(defaultAuthToken)
+                .provisionApiUrl(provisionApiUrl)
                 .consumerEmail(consumerEmail)
                 .build();
     }

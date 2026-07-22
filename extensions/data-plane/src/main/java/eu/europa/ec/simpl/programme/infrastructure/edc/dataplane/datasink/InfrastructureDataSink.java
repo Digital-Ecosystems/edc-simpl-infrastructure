@@ -36,6 +36,7 @@ public class InfrastructureDataSink extends ParallelSink {
     private Vault vault;
     private String keyName;
     private String defaultAuthToken;
+    private String provisionApiUrl;
     private String consumerEmail;
 
     InfrastructureDataSink() {}
@@ -48,19 +49,18 @@ public class InfrastructureDataSink extends ParallelSink {
 
             var requesterUniqueId = String.format("%s.%s", dataSource.getParticipantId(), dataSource.getContractAgreementId());
 
-            var provisioningAPI = dataSource.getProvisioningAPI();
             var deploymentScriptId = dataSource.getDeploymentScriptId();
 
             var authToken = getAuthToken();
 
-            var response = backendAPIClient.sendTriggerRequest(provisioningAPI, authToken, deploymentScriptId, requesterUniqueId, consumerEmail);
+            var response = backendAPIClient.sendTriggerRequest(provisionApiUrl, authToken, deploymentScriptId, requesterUniqueId, consumerEmail);
 
             if (response.success()) {
                 this.monitor.info(format("Script trigger request successful send to provisioningAPI %s, requesterUniqueId: %s, deploymentScriptId: %s",
-                        provisioningAPI, requesterUniqueId, deploymentScriptId));
+                        provisionApiUrl, requesterUniqueId, deploymentScriptId));
             } else {
                 return StreamResult.error((format("Error sending script trigger request to provisioningAPI %s, error: %s",
-                        provisioningAPI, response.message())));
+                        provisionApiUrl, response.message())));
             }
         }
 
@@ -116,6 +116,11 @@ public class InfrastructureDataSink extends ParallelSink {
             return this;
         }
 
+        public Builder provisionApiUrl(String provisionApiUrl) {
+            sink.provisionApiUrl = provisionApiUrl;
+            return this;
+        }
+
         public Builder consumerEmail(String consumerEmail) {
             sink.consumerEmail = consumerEmail;
             return this;
@@ -127,6 +132,7 @@ public class InfrastructureDataSink extends ParallelSink {
             Objects.requireNonNull(sink.typeManager, "typeManager is required");
             Objects.requireNonNull(sink.vault, "vault is required");
             Objects.requireNonNull(sink.defaultAuthToken, "defaultAuthToken is required");
+            Objects.requireNonNull(sink.provisionApiUrl, "provisionApiUrl is required");
             Objects.requireNonNull(sink.consumerEmail, "consumerEmail is required");
         }
     }

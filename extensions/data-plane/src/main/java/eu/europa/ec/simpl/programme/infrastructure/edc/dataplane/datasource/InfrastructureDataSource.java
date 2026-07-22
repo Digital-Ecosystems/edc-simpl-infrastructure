@@ -27,13 +27,11 @@ public class InfrastructureDataSource implements DataSource, DataSource.Part {
 
     private final String participantId;
     private final String contractAgreementId;
-    private final String provisioningAPI;
     private final String deploymentScriptId;
 
-    InfrastructureDataSource(String participantId, String contractAgreementId, String provisioningAPI, String deploymentScriptId) {
+    InfrastructureDataSource(String participantId, String contractAgreementId, String deploymentScriptId) {
         this.participantId = participantId;
         this.contractAgreementId = contractAgreementId;
-        this.provisioningAPI = provisioningAPI;
         this.deploymentScriptId = deploymentScriptId;
     }
 
@@ -43,10 +41,6 @@ public class InfrastructureDataSource implements DataSource, DataSource.Part {
 
     public String getContractAgreementId() {
         return contractAgreementId;
-    }
-
-    public String getProvisioningAPI() {
-        return provisioningAPI;
     }
 
     public String getDeploymentScriptId() {

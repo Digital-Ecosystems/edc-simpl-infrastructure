@@ -50,10 +50,10 @@ The `data-plane` extension has the following dependencies:
 ### Configurations
 The `data-plane` extension has the following configurations:
 
-| Configuration name                            | Description                                                                                                                     |
-|-----------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| `edc.infrastructure.simpl.default.auth.token` | Default authentication token send to the Infrastructure BE API if a `secretKey` is not provided in the transfer process request |
-
+| Configuration name                             | Description                                                                                                                    |
+|------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| `edc.infrastructure.simpl.default.auth.token`  | Default authentication token send to the Infrastructure BE API if a `secretKey` is not provided in the transfer process request |
+| `edc.infrastructure.simpl.provision.api.url`   | URL of the triggering module's API that will provision the deployment script on the infrastructure provider                    |
 ### Usage
 
 #### Diagrams
@@ -68,7 +68,7 @@ Payload of the creation of an asset, using the `/management/v3/assets/ endpoint`
 ```
 {
     "@context": {
-        "@vocab": "https://w3id.org/edc/v0.0.1/ns/")
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
     },
     "@id": "asset-671",
     "properties": {
@@ -76,7 +76,6 @@ Payload of the creation of an asset, using the `/management/v3/assets/ endpoint`
     },
     "dataAddress": {
         "type": "Infrastructure",
-        "provisioningAPI": "http://localhost:8080/scripts/trigger",
         "deploymentScriptId": "0806537b-a3a6-4527-a6e4-c404647558be"
     }
 }
@@ -87,7 +86,6 @@ Payload of the creation of an asset, using the `/management/v3/assets/ endpoint`
 | `@id`                            | Id of the asset                                                                                             |
 | `properties.name`                | Name of the asset                                                                                           |
 | `dataAddress.type`               | This extension uses the `Infrastructure` designation                                                        |
-| `dataAddress.provioningAPI`      | URL of the triggering module's API that will provision the deployment script on the infrastructure provider |
 | `dataAddress.deploymentScriptId` | Id the of deployment script registered on the triggering module                                             |
 
 Triggering of the deployment script, using the `management/v3/transferprocesses` endpoint of the Connector:
@@ -103,7 +101,7 @@ Triggering of the deployment script, using the `management/v3/transferprocesses`
     "transferType": "Infrastructure-PUSH",
     "dataDestination":{
         "type":"Infrastructure",
-        "secretKey": "7ad730f9-b380-4cc2-9268-61284dbda6ba"
+        "secretKey": "7ad730f9-b380-4cc2-9268-61284dbda6ba",
         "consumerEmail": "someuser@xptodomain.com"
     }
 }
