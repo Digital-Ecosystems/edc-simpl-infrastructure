@@ -92,7 +92,7 @@ public class InfrastructureDataPlaneExtension implements ServiceExtension {
         var sourceFactory = new InfrastructureDataSourceFactory(participantId, dataAddressValidatorRegistry, transferProcessStore, assetIndex);
         pipelineService.registerFactory(sourceFactory);
 
-        var sinkFactory = new InfrastructureDataSinkFactory(monitor, dataAddressValidatorRegistry, executorContainer.getExecutorService(), vault, backendAPIClient, typeManager, defaultAuthToken, provisionApiUrl);
+        var sinkFactory = new InfrastructureDataSinkFactory(monitor, dataAddressValidatorRegistry, executorContainer.getExecutorService(), vault, backendAPIClient, typeManager, defaultAuthToken, provisionApiUrl, transferProcessStore);
         pipelineService.registerFactory(sinkFactory);
         monitor.debug("Data Plane components initialized");
 
