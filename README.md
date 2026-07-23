@@ -53,7 +53,7 @@ The `data-plane` extension has the following configurations:
 | Configuration name                             | Description                                                                                                                    |
 |------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
 | `edc.infrastructure.simpl.default.auth.token`  | Default authentication token send to the Infrastructure BE API if a `secretKey` is not provided in the transfer process request |
-| `edc.infrastructure.simpl.provision.api.url`   | URL of the triggering module's API that will provision the deployment script on the infrastructure provider                    |
+| `edc.infrastructure.simpl.provisioning.api.url`   | URL of the triggering module's API that will provision the deployment script on the infrastructure provider                    |
 ### Usage
 
 #### Diagrams

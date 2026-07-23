@@ -38,7 +38,7 @@ public class InfrastructureDataPlaneExtension implements ServiceExtension {
     public static final String NAME = "SIMPL Infrastructure Data Plane Extensions";
 
     private static final String DEFAULT_AUTH_TOKEN_CONFIG = "edc.infrastructure.simpl.default.auth.token";
-    private static final String DEFAULT_PROVISION_API_URL = "edc.infrastructure.simpl.provision.api.url";
+    private static final String DEFAULT_PROVISIONING_API_URL = "edc.infrastructure.simpl.provisioning.api.url";
 
     @Inject
     private DataAddressValidatorRegistry dataAddressValidatorRegistry;
@@ -79,9 +79,9 @@ public class InfrastructureDataPlaneExtension implements ServiceExtension {
             return;
         }
 
-        var provisionApiUrl = context.getSetting(DEFAULT_PROVISION_API_URL, "");
+        var provisionApiUrl = context.getSetting(DEFAULT_PROVISIONING_API_URL, "");
         if (provisionApiUrl.isBlank()) {
-            throw new EdcException(String.format("Required setting %s not found. The extension will not loaded", DEFAULT_PROVISION_API_URL));
+            throw new EdcException(String.format("Required setting %s not found. The extension will not loaded", DEFAULT_PROVISIONING_API_URL));
         }
 
         // Backend API
